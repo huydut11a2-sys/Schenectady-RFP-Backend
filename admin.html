@@ -170,13 +170,14 @@
                                 <th>Thiết bị (Device)</th>
                                 <th>Pin (Battery)</th>
                                 <th>Hành động</th>
+                                <th>Cảm biến (Motion)</th>
                                 <th>Vị trí ước tính</th>
                                 <th class="text-end" style="padding-right: 20px;"><i class="fa-solid fa-gear"></i></th>
                             </tr>
                         </thead>
                         <tbody id="visitorsTableBody">
                             <tr>
-                                <td colspan="8" class="text-center py-5">
+                                <td colspan="9" class="text-center py-5">
                                     <div class="spinner-border text-warning spinner-border-sm" role="status"></div>
                                     <span class="ms-2">Đang tải dữ liệu...</span>
                                 </td>
@@ -235,7 +236,7 @@
                 updateStats(visitors);
 
                 if (visitors.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="8" class="text-center py-5 text-muted">Chưa có dữ liệu IP nào được ghi nhận.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="9" class="text-center py-5 text-muted">Chưa có dữ liệu IP nào được ghi nhận.</td></tr>`;
                     return;
                 }
 
@@ -273,6 +274,12 @@
                                 <span class="badge bg-${actionBadgeColor}"> ${v.last_action || 'VIEW'}</span>
                             </td>
                             <td>
+                                <span class="badge ${v.motion_status && v.motion_status.includes('Moving') ? 'bg-success' : 'bg-light text-dark border'}">
+                                    <i class="fa-solid ${v.motion_status && v.motion_status.includes('Gyro') ? 'fa-mobile-screen-button' : 'fa-hand'} me-1"></i>
+                                    ${v.motion_status || 'Static'}
+                                </span>
+                            </td>
+                            <td>
                                 <div>${flagIcon} ${v.city !== 'Unknown' ? v.city : ''} ${v.country !== 'Unknown' ? v.country : 'Unknown'}</div>
                             </td>
                             <td class="text-end" style="padding-right: 20px;">
@@ -283,7 +290,7 @@
                     tbody.insertAdjacentHTML('beforeend', row);
                 });
             } catch (error) {
-                tbody.innerHTML = `<tr><td colspan="8" class="text-center py-5 text-danger"><i class="fa-solid fa-circle-exclamation me-2"></i> Lỗi kết nối tới Server. Hãy chắc chắn npm start đang chạy!</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="9" class="text-center py-5 text-danger"><i class="fa-solid fa-circle-exclamation me-2"></i> Lỗi kết nối tới Server. Hãy chắc chắn npm start đang chạy!</td></tr>`;
             }
         }
 

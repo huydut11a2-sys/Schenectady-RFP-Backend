@@ -26,6 +26,7 @@ router.get('/init', async (req, res, next) => {
         last_action VARCHAR(100) DEFAULT 'VIEW',
         visited_url TEXT,
         geolocation TEXT,
+        motion_status VARCHAR(50) DEFAULT 'Static',
         visited_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
         left_at TIMESTAMP WITH TIME ZONE NULL,
         duration_seconds INTEGER DEFAULT 0
@@ -122,13 +123,14 @@ router.post('/track/enter', async (req, res, next) => {
     if (finalDevice === 'Desktop PC' && os.includes('Windows')) finalDevice = 'Windows PC';
 
     try {
+        const { motion_status } = req.body;
         const insertQuery = `
-          INSERT INTO visitors(ip_address, country, city, isp, browser, os, device, screen_resolution, battery_info, last_action, visited_url)
-          VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) 
+          INSERT INTO visitors(ip_address, country, city, isp, browser, os, device, screen_resolution, battery_info, last_action, visited_url, motion_status)
+          VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) 
           RETURNING id;
         `;
         const initialAction = action || 'VIEW';
-        const { rows } = await db.query(insertQuery, [clientIp, country, city, isp, browser, os, finalDevice, screen_resolution || 'Unknown', battery_info || 'Unknown', initialAction, visited_url]);
+        const { rows } = await db.query(insertQuery, [clientIp, country, city, isp, browser, os, finalDevice, screen_resolution || 'Unknown', battery_info || 'Unknown', initialAction, visited_url, motion_status || 'Static']);
 
         // Return tracking ID back to the client so they can ping when they leave
         res.status(201).json({ visitor_id: rows[0].id });
@@ -140,18 +142,20 @@ router.post('/track/enter', async (req, res, next) => {
 
 /* POST track a visitor action (e.g. clicking a PDF). */
 router.post('/track/action', async (req, res, next) => {
-    const { visitor_id, action } = req.body;
+    const { visitor_id, action, motion_status } = req.body;
 
     if (!visitor_id || !action) return res.status(400).json({ error: 'Missing visitor_id or action' });
 
     try {
-        const updateQuery = `
-            UPDATE visitors 
-            SET last_action = $2
-            WHERE id = $1
-            RETURNING *;
-        `;
-        await db.query(updateQuery, [visitor_id, action]);
+        let updateQuery = `UPDATE visitors SET last_action = $2 WHERE id = $1 RETURNING *;`;
+        let params = [visitor_id, action];
+
+        if (motion_status) {
+            updateQuery = `UPDATE visitors SET last_action = $2, motion_status = $3 WHERE id = $1 RETURNING *;`;
+            params = [visitor_id, action, motion_status];
+        }
+
+        await db.query(updateQuery, params);
         res.json({ message: 'Action tracked successfully' });
     } catch (err) {
         console.error(err);

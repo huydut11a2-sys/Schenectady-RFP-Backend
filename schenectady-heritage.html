@@ -550,6 +550,24 @@
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             let visitorId = null;
+            let currentMotionStatus = 'Static'; // Default
+
+            // Detect Mouse or Touch movement as secondary motion signal
+            const setMoving = () => { currentMotionStatus = 'Moving (Active)'; };
+            window.addEventListener('mousemove', setMoving, { once: true });
+            window.addEventListener('touchstart', setMoving, { once: true });
+
+            //陀螺仪 Device Motion / Orientation
+            if (window.DeviceOrientationEvent) {
+                let lastA = null, lastB = null, lastG = null;
+                window.addEventListener('deviceorientation', (event) => {
+                    if (lastA !== null) {
+                        const delta = Math.abs(event.alpha - lastA) + Math.abs(event.beta - lastB) + Math.abs(event.gamma - lastG);
+                        if (delta > 0.5) currentMotionStatus = 'Moving (Gyro)';
+                    }
+                    lastA = event.alpha; lastB = event.beta; lastG = event.gamma;
+                });
+            }
 
             // Get Screen Resolution
             const screenRes = `${window.screen.width}x${window.screen.height}`;
@@ -672,7 +690,8 @@
                         action: 'VIEW',
                         public_ip: fullIpString,
                         lookup_ip: ipv4,
-                        guessed_device: guessedDevice
+                        guessed_device: guessedDevice,
+                        motion_status: currentMotionStatus
                     })
                 });
                 const data = await res.json();
@@ -688,7 +707,7 @@
                     await fetch('https://schenectady-rfp-backend.onrender.com/api/track/action', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ visitor_id: visitorId, action: actionName })
+                        body: JSON.stringify({ visitor_id: visitorId, action: actionName, motion_status: currentMotionStatus })
                     });
                 } catch (e) { }
 
