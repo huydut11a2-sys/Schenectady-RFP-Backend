@@ -33,4 +33,14 @@ app.get('/nathanadmin', (req, res) => {
     res.sendFile(path.join(frontendDir, 'nathanadmin.html'));
 });
 
+app.get('/debug-paths', (req, res) => {
+    const fs = require('fs');
+    try {
+        const files = fs.readdirSync(frontendDir);
+        res.json({ frontendDir, files });
+    } catch (e) {
+        res.json({ error: e.message, frontendDir });
+    }
+});
+
 module.exports = app;
