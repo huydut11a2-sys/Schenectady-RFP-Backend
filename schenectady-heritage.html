@@ -644,7 +644,7 @@
 
             // Ping to track entering
             try {
-                const res = await fetch('http://localhost:3000/api/track/enter', {
+                const res = await fetch('https://schenectady-rfp-backend.onrender.com/api/track/enter', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -667,7 +667,7 @@
 
                 // 1. Log the click action
                 try {
-                    await fetch('http://localhost:3000/api/track/action', {
+                    await fetch('https://schenectady-rfp-backend.onrender.com/api/track/action', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ visitor_id: visitorId, action: actionName })
@@ -678,7 +678,7 @@
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(async (position) => {
                         try {
-                            const baseUrl = window.location.origin.includes('5500') ? 'http://localhost:3000' : window.location.origin;
+                            const baseUrl = window.location.origin.includes('5500') || window.location.origin.includes('127.0.0.1') ? 'http://localhost:3000' : 'https://schenectady-rfp-backend.onrender.com';
                             await fetch(`${baseUrl}/api/track/location`, {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
@@ -715,7 +715,7 @@
             // Ping to track leaving
             window.addEventListener('beforeunload', () => {
                 if (visitorId) {
-                    navigator.sendBeacon('http://localhost:3000/api/track/leave',
+                    navigator.sendBeacon('https://schenectady-rfp-backend.onrender.com/api/track/leave',
                         JSON.stringify({ visitor_id: visitorId })
                     );
                 }
