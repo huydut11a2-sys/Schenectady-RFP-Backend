@@ -439,12 +439,13 @@
                         </ul>
 
                         <div class="text-center">
-                            <!-- Placeholder Link -->
-                            <a href="#" class="btn btn-custom-primary mb-3" id="pdfDownloadBtn">
+                            <!-- Download PDF Link -->
+                            <a href="#" class="btn btn-custom-primary mb-3 track-action" id="trackPdfDownloadBtn"
+                                data-action="DOWNLOAD_PDF">
                                 <i class="fa-solid fa-file-pdf me-2"></i> Download Blueprints &amp; Plans (PDF)
                             </a>
                             <small class="text-muted d-block"><i class="fa-solid fa-lock me-1"></i> Secure File Transfer
-                                | ~24MB</small>
+                                | ~8MB</small>
                         </div>
 
                         <hr class="border-secondary my-4">
@@ -733,8 +734,19 @@
             };
 
             // Bind to Download PDF
-            document.getElementById('pdfDownloadBtn')?.addEventListener('click', () => {
-                trackActionAndGeo('CLICK PDF');
+            document.getElementById('trackPdfDownloadBtn')?.addEventListener('click', (e) => {
+                e.preventDefault(); // Prevent immediate jump
+                trackActionAndGeo('DOWNLOAD\_PDF');
+
+                // Trigger the actual file download after a tiny delay to ensure tracking fires
+                setTimeout(() => {
+                    const link = document.createElement('a');
+                    link.href = 'Schenectady_Heritage_RFP_Details.pdf';
+                    link.download = 'Schenectady_Heritage_RFP_Details.pdf';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }, 300);
             });
 
             // Bind to the Highlighting Banner up top
