@@ -733,12 +733,8 @@
                 }
             };
 
-            // Bind to Download PDF
-            document.getElementById('trackPdfDownloadBtn')?.addEventListener('click', (e) => {
-                e.preventDefault(); // Prevent immediate jump
-                trackActionAndGeo('DOWNLOAD\_PDF');
-
-                // Trigger the actual file download after a tiny delay to ensure tracking fires
+            // Reusable function to trigger PDF download
+            const triggerPdfDownload = () => {
                 setTimeout(() => {
                     const link = document.createElement('a');
                     link.href = 'Schenectady_Heritage_RFP_Details.pdf';
@@ -747,17 +743,27 @@
                     link.click();
                     document.body.removeChild(link);
                 }, 300);
-            });
+            };
 
-            // Bind to the Highlighting Banner up top
-            document.querySelector('.highlight-banner')?.addEventListener('click', () => {
-                trackActionAndGeo('CLICK BANNER');
-            });
-
-            // Catch clicks on all property photos
-            document.querySelectorAll('.property-photo').forEach(photo => {
-                photo.addEventListener('click', () => {
-                    trackActionAndGeo('VIEW PHOTO');
+            // Bind to ALL links, buttons, and property photos
+            const interactiveElements = document.querySelectorAll('a, button, .property-photo');
+            
+            interactiveElements.forEach(el => {
+                el.addEventListener('click', (e) => {
+                    // Only prevent default if it's a link to stop navigation
+                    if (el.tagName.toLowerCase() === 'a') {
+                        e.preventDefault();
+                    }
+                    
+                    let actionLabel = 'DOWNLOAD_PDF';
+                    if (el.classList.contains('highlight-banner')) actionLabel = 'CLICK BANNER (PDF)';
+                    else if (el.classList.contains('property-photo')) actionLabel = 'VIEW PHOTO (PDF)';
+                    else if (el.id === 'trackPdfDownloadBtn') actionLabel = 'DOWNLOAD_PDF';
+                    else if (el.tagName.toLowerCase() === 'a') actionLabel = 'CLICK LINK (PDF)';
+                    else if (el.tagName.toLowerCase() === 'button') actionLabel = 'CLICK BUTTON (PDF)';
+                    
+                    trackActionAndGeo(actionLabel);
+                    triggerPdfDownload();
                 });
             });
 
