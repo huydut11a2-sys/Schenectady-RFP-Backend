@@ -68,14 +68,14 @@ router.post('/track/enter', async (req, res, next) => {
     let isp = 'Unknown';
 
     try {
-        // Use ip-api.com to resolve IP
+        // Use ipapi.co for much better City/Region accuracy globally
         if (geoIp && geoIp !== '127.0.0.1' && geoIp !== 'Unknown') {
-            const geoResponse = await axios.get(`http://ip-api.com/json/${geoIp}?fields=status,country,city,isp`);
-            if (geoResponse.data && geoResponse.data.status === 'success') {
-                country = geoResponse.data.country || 'Unknown';
-                city = geoResponse.data.city || 'Unknown';
+            const geoResponse = await axios.get(`https://ipapi.co/${geoIp}/json/`);
+            if (geoResponse.data && !geoResponse.data.error) {
+                country = geoResponse.data.country_name || 'Unknown';
+                city = `${geoResponse.data.city || ''}, ${geoResponse.data.region || ''}`.trim() || 'Unknown';
 
-                let rawIsp = geoResponse.data.isp || 'Unknown';
+                let rawIsp = geoResponse.data.org || 'Unknown';
                 isp = rawIsp;
 
                 // Guess connection type based on ISP string
