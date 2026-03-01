@@ -55,6 +55,28 @@ router.get('/init', async (req, res, next) => {
     }
 });
 
+/* Safe: Create ONLY the submissions table (without dropping anything). */
+router.get('/init-submissions', async (req, res, next) => {
+    try {
+        await db.query(`
+          CREATE TABLE IF NOT EXISTS submissions (
+            id SERIAL PRIMARY KEY,
+            visitor_id INTEGER,
+            full_name VARCHAR(200),
+            email VARCHAR(200),
+            phone VARCHAR(50),
+            company VARCHAR(200),
+            message TEXT,
+            submitted_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+          );
+        `);
+        res.json({ message: 'Submissions table created successfully (no data lost)!' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to create submissions table' });
+    }
+});
+
 /* GET all visitors. */
 router.get('/visitors', async (req, res, next) => {
     try {
