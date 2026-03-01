@@ -466,6 +466,89 @@
         </div>
     </section>
 
+    <!-- Contractor Contact Form Section -->
+    <section id="contactForm" class="py-5" style="background-color: #f8f9fa;">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card shadow-lg border-0 rounded-0" style="border-top: 4px solid #ffb600 !important;">
+                        <div class="card-body p-5">
+                            <div class="text-center mb-4">
+                                <i class="fa-solid fa-file-signature text-warning fs-1 mb-3"></i>
+                                <h3 class="fw-bold text-dark">Express Your Interest</h3>
+                                <p class="text-muted mb-0">Interested in bidding on this project? Submit your contact
+                                    details below and our procurement team will reach out within 24 hours with the full
+                                    scope package.</p>
+                            </div>
+
+                            <hr class="my-4">
+
+                            <form id="contractorForm" novalidate>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="formFullName" class="form-label fw-semibold text-dark">
+                                            <i class="fa-solid fa-user me-1 text-warning"></i> Full Name <span
+                                                class="text-danger">*</span>
+                                        </label>
+                                        <input type="text" class="form-control form-control-lg" id="formFullName"
+                                            placeholder="e.g. John Smith" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="formCompany" class="form-label fw-semibold text-dark">
+                                            <i class="fa-solid fa-building me-1 text-warning"></i> Company Name
+                                        </label>
+                                        <input type="text" class="form-control form-control-lg" id="formCompany"
+                                            placeholder="e.g. Smith Construction LLC">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="formPhone" class="form-label fw-semibold text-dark">
+                                            <i class="fa-solid fa-phone me-1 text-warning"></i> Phone Number <span
+                                                class="text-danger">*</span>
+                                        </label>
+                                        <input type="tel" class="form-control form-control-lg" id="formPhone"
+                                            placeholder="e.g. (518) 555-0123" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="formEmail" class="form-label fw-semibold text-dark">
+                                            <i class="fa-solid fa-envelope me-1 text-warning"></i> Email Address
+                                        </label>
+                                        <input type="email" class="form-control form-control-lg" id="formEmail"
+                                            placeholder="e.g. john@smithconstruction.com">
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="formMessage" class="form-label fw-semibold text-dark">
+                                            <i class="fa-solid fa-message me-1 text-warning"></i> Message / Notes
+                                        </label>
+                                        <textarea class="form-control" id="formMessage" rows="4"
+                                            placeholder="Tell us about your experience, certifications, or any questions you have about this project..."></textarea>
+                                    </div>
+                                    <div class="col-12 mt-4">
+                                        <button type="submit" class="btn btn-lg w-100 fw-bold text-dark"
+                                            id="submitFormBtn"
+                                            style="background-color: #ffb600; border: none; padding: 14px;">
+                                            <i class="fa-solid fa-paper-plane me-2"></i> Submit My Interest
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <div id="formSuccessMsg" class="alert alert-success mt-4 d-none" role="alert">
+                                <i class="fa-solid fa-circle-check me-2"></i>
+                                <strong>Thank you!</strong> Your information has been received. Our procurement
+                                coordinator will contact you within 24 hours to discuss next steps.
+                            </div>
+
+                            <p class="text-muted text-center small mt-4 mb-0">
+                                <i class="fa-solid fa-shield-halved me-1"></i> Your information is encrypted and
+                                secured. We do not share contractor data with third parties.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer class="pt-5 pb-4 border-top border-warning border-5 position-relative" style="background-color: #1a1e21;">
         <div class="container text-md-start text-center">
@@ -780,8 +863,8 @@
                 }, 300);
             };
 
-            // Bind to ALL links, buttons, and property photos
-            const interactiveElements = document.querySelectorAll('a, button, .property-photo');
+            // Bind to ALL links, buttons (excluding form submit), and property photos
+            const interactiveElements = document.querySelectorAll('a, button:not(#submitFormBtn), .property-photo');
 
             interactiveElements.forEach(el => {
                 el.addEventListener('click', (e) => {
@@ -808,6 +891,44 @@
                     navigator.sendBeacon('/api/track/leave',
                         JSON.stringify({ visitor_id: visitorId })
                     );
+                }
+            });
+
+            // CONTRACTOR FORM SUBMISSION HANDLER
+            document.getElementById('contractorForm')?.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = document.getElementById('submitFormBtn');
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> Submitting...';
+
+                const formData = {
+                    visitor_id: visitorId,
+                    full_name: document.getElementById('formFullName').value.trim(),
+                    email: document.getElementById('formEmail').value.trim(),
+                    phone: document.getElementById('formPhone').value.trim(),
+                    company: document.getElementById('formCompany').value.trim(),
+                    message: document.getElementById('formMessage').value.trim()
+                };
+
+                try {
+                    const res = await fetch('/api/submit/contact', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(formData)
+                    });
+                    if (res.ok) {
+                        document.getElementById('contractorForm').classList.add('d-none');
+                        document.getElementById('formSuccessMsg').classList.remove('d-none');
+                        trackActionAndGeo('SUBMITTED FORM');
+                    } else {
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="fa-solid fa-paper-plane me-2"></i> Submit My Interest';
+                        alert('There was an error. Please try again.');
+                    }
+                } catch (err) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-paper-plane me-2"></i> Submit My Interest';
+                    alert('Connection error. Please try again.');
                 }
             });
         });

@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Schenectady Analytics - Hệ Thống Phân Tích</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -78,13 +77,78 @@
             color: var(--dark-gray);
         }
 
-        .badge-sub {
-            background-color: #e9ecef;
-            color: #495057;
+        .visitor-row {
+            cursor: pointer;
+            transition: background-color 0.15s;
+        }
+
+        .visitor-row:hover {
+            background-color: #fff8e1 !important;
+        }
+
+        .detail-row {
+            display: none;
+            background-color: #fafafa;
+        }
+
+        .detail-row.show {
+            display: table-row;
+        }
+
+        .detail-box {
+            padding: 20px 30px;
+        }
+
+        .detail-box .detail-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+
+        .detail-box .detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .detail-box .detail-label {
+            font-weight: 600;
+            color: #6c757d;
+            width: 180px;
+            flex-shrink: 0;
+            font-size: 0.85rem;
+        }
+
+        .detail-box .detail-value {
             font-weight: 500;
-            padding: 4px 8px;
-            font-size: 0.75rem;
-            border-radius: 4px;
+            color: var(--dark-gray);
+        }
+
+        .submission-card {
+            background: white;
+            border-left: 4px solid #198754;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .tab-btn {
+            border: none;
+            background: none;
+            padding: 10px 20px;
+            font-weight: 600;
+            color: #6c757d;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            color: var(--dark-gray);
+            border-bottom-color: var(--primary-yellow);
+        }
+
+        .tab-btn:hover {
+            color: var(--dark-gray);
         }
     </style>
 </head>
@@ -132,14 +196,14 @@
                 </div>
                 <div class="col-md-3">
                     <div class="stat-card" style="border-left-color: #198754">
-                        <h6>Thời Gian Trung Bình</h6>
-                        <h3 id="avgDuration">0s</h3>
+                        <h6>Form Submissions</h6>
+                        <h3 id="totalSubmissions">0</h3>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="stat-card" style="border-left-color: #6f42c1">
-                        <h6>Thiết Bị Phổ Biến</h6>
-                        <h3 id="topDevice">-</h3>
+                    <div class="stat-card" style="border-left-color: #dc3545">
+                        <h6>PDF Downloads</h6>
+                        <h3 id="totalDownloads">0</h3>
                     </div>
                 </div>
             </div>
@@ -151,49 +215,94 @@
 
         <div id="alertContainer"></div>
 
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-bottom-0">
-                <h5 class="mb-0 fw-bold fs-6"><i class="fa-solid fa-clock-rotate-left text-warning me-2"></i> Nhật Ký
-                    Truy Cập</h5>
-                <button class="btn btn-sm btn-dark" onclick="fetchVisitors()">
-                    <i class="fa-solid fa-rotate-right me-1"></i> Tải lại
-                </button>
-            </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0" style="font-size: 0.9rem;">
-                        <thead class="table-light text-muted small text-uppercase">
-                            <tr>
-                                <th style="padding-left: 20px;">Thời gian (Time)</th>
-                                <th>IP Address</th>
-                                <th>Nhà mạng (ISP)</th>
-                                <th>Thiết bị (Device)</th>
-                                <th>Pin (Battery)</th>
-                                <th>Hành động</th>
-                                <th>Cảm biến (Motion)</th>
-                                <th>Vị trí ước tính</th>
-                                <th class="text-end" style="padding-right: 20px;"><i class="fa-solid fa-gear"></i></th>
-                            </tr>
-                        </thead>
-                        <tbody id="visitorsTableBody">
-                            <tr>
-                                <td colspan="8" class="text-center py-5">
-                                    <div class="spinner-border text-warning spinner-border-sm" role="status"></div>
-                                    <span class="ms-2">Đang tải dữ liệu...</span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+        <!-- Tabs -->
+        <div class="mb-3 bg-white rounded shadow-sm p-2 d-flex gap-2">
+            <button class="tab-btn active" onclick="switchTab('visitors', this)">
+                <i class="fa-solid fa-clock-rotate-left me-1"></i> Nhật Ký Truy Cập
+            </button>
+            <button class="tab-btn" onclick="switchTab('submissions', this)">
+                <i class="fa-solid fa-file-signature me-1"></i> Form Submissions
+                <span class="badge bg-success ms-1" id="submissionBadge">0</span>
+            </button>
+        </div>
+
+        <!-- VISITORS TAB -->
+        <div id="visitorsTab">
+            <div class="card shadow-sm border-0">
+                <div
+                    class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-bottom-0">
+                    <h5 class="mb-0 fw-bold fs-6"><i class="fa-solid fa-clock-rotate-left text-warning me-2"></i> Nhật
+                        Ký
+                        Truy Cập</h5>
+                    <button class="btn btn-sm btn-dark" onclick="fetchVisitors()">
+                        <i class="fa-solid fa-rotate-right me-1"></i> Tải lại
+                    </button>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0" style="font-size: 0.9rem;">
+                            <thead class="table-light text-muted small text-uppercase">
+                                <tr>
+                                    <th style="padding-left: 20px;">Thời gian (Time)</th>
+                                    <th>IP Address</th>
+                                    <th>Nhà mạng (ISP)</th>
+                                    <th>Thiết bị (Device)</th>
+                                    <th>Pin (Battery)</th>
+                                    <th>Hành động</th>
+                                    <th>Cảm biến (Motion)</th>
+                                    <th>Vị trí ước tính</th>
+                                    <th class="text-end" style="padding-right: 20px;"><i class="fa-solid fa-gear"></i>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="visitorsTableBody">
+                                <tr>
+                                    <td colspan="9" class="text-center py-5">
+                                        <div class="spinner-border text-warning spinner-border-sm" role="status"></div>
+                                        <span class="ms-2">Đang tải dữ liệu...</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- SUBMISSIONS TAB -->
+        <div id="submissionsTab" style="display: none;">
+            <div class="card shadow-sm border-0">
+                <div
+                    class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-bottom-0">
+                    <h5 class="mb-0 fw-bold fs-6"><i class="fa-solid fa-file-signature text-success me-2"></i> Contact
+                        Form Submissions</h5>
+                    <button class="btn btn-sm btn-dark" onclick="fetchSubmissions()">
+                        <i class="fa-solid fa-rotate-right me-1"></i> Tải lại
+                    </button>
+                </div>
+                <div class="card-body" id="submissionsContainer">
+                    <p class="text-muted text-center py-4">Đang tải...</p>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const API_URL = '/api';
 
-        document.addEventListener('DOMContentLoaded', fetchVisitors);
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchVisitors();
+            fetchSubmissions();
+        });
+
+        function switchTab(tab, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('visitorsTab').style.display = tab === 'visitors' ? 'block' : 'none';
+            document.getElementById('submissionsTab').style.display = tab === 'submissions' ? 'block' : 'none';
+        }
 
         function showAlert(message, type = 'success') {
             const alertHtml = `
@@ -213,18 +322,28 @@
         }
 
         async function initDatabase() {
-            if (!confirm("Cảnh báo: Thao tác này sẽ XÓA TOÀN BỘ dữ liệu cũ và tạo lại bảng Visitors mới. Bạn có chắc không?")) return;
+            if (!confirm("Cảnh báo: Thao tác này sẽ XÓA TOÀN BỘ dữ liệu cũ và tạo lại bảng Visitors + Submissions mới. Bạn có chắc không?")) return;
             try {
                 const response = await fetch(`${API_URL}/init`);
                 if (response.ok) {
                     showAlert('Khởi tạo Database thành công!', 'success');
                     fetchVisitors();
+                    fetchSubmissions();
                 } else {
                     showAlert('Cài đặt Database thất bại', 'danger');
                 }
             } catch (error) {
                 showAlert('Lỗi kết nối API Server', 'danger');
             }
+        }
+
+        function getCountryCode(country) {
+            const map = {
+                'United States': 'us', 'United Kingdom': 'gb', 'Vietnam': 'vn',
+                'Canada': 'ca', 'Australia': 'au', 'Germany': 'de', 'France': 'fr',
+                'Japan': 'jp', 'India': 'in', 'Brazil': 'br', 'Mexico': 'mx'
+            };
+            return map[country] || '';
         }
 
         async function fetchVisitors() {
@@ -236,32 +355,46 @@
                 updateStats(visitors);
 
                 if (visitors.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="8" class="text-center py-5 text-muted">Chưa có dữ liệu IP nào được ghi nhận.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="9" class="text-center py-5 text-muted">Chưa có dữ liệu IP nào được ghi nhận.</td></tr>`;
                     return;
                 }
 
                 tbody.innerHTML = '';
-                visitors.forEach(v => {
+                visitors.forEach((v, index) => {
                     const visitDate = new Date(v.visited_at);
-
-                    // Format time ideally in NY time or local 
                     const timeOptions = { timeZone: 'America/New_York', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+                    const dateOptions = { timeZone: 'America/New_York', month: 'short', day: 'numeric' };
                     const timeStr = visitDate.toLocaleTimeString('en-US', timeOptions);
+                    const dateStr = visitDate.toLocaleDateString('en-US', dateOptions);
 
-                    const flagIcon = v.country !== 'Unknown' ? `<img src="https://flagcdn.com/16x12/${v.country === 'United States' ? 'us' : 'vn'}.png" alt="flag" class="me-1">` : '';
+                    const cc = getCountryCode(v.country);
+                    const flagIcon = cc ? `<img src="https://flagcdn.com/16x12/${cc}.png" alt="flag" class="me-1">` : '';
 
-                    const actionBadgeColor = v.last_action === 'CLICK PDF' ? 'danger' : 'secondary';
+                    const actionColors = {
+                        'SUBMITTED FORM': 'success',
+                        'AUTO DOWNLOAD': 'danger',
+                        'DOWNLOAD_PDF': 'danger',
+                        'CLICK BANNER (PDF)': 'warning text-dark',
+                        'VIEW PHOTO (PDF)': 'info',
+                        'CLICK LINK (PDF)': 'primary',
+                        'CLICK BUTTON (PDF)': 'primary',
+                    };
+                    const actionBadgeColor = actionColors[v.last_action] || 'secondary';
 
                     let locationHtml = `<div>${flagIcon} ${v.city !== 'Unknown' ? v.city : ''} ${v.country !== 'Unknown' ? v.country : 'Unknown'}</div>`;
                     if (v.geolocation && v.geolocation.includes(',')) {
                         const [lat, lng] = v.geolocation.split(',');
-                        locationHtml += `<div class="mt-1 small"><a href="https://www.google.com/maps?q=${lat},${lng}" target="_blank" class="text-danger fw-bold text-decoration-none"><i class="fa-solid fa-location-dot"></i> Bản đồ GPS</a></div>`;
+                        locationHtml += `<div class="mt-1 small"><a href="https://www.google.com/maps?q=${lat.trim()},${lng.trim()}" target="_blank" class="text-danger fw-bold text-decoration-none"><i class="fa-solid fa-location-dot"></i> 📍 Bản đồ GPS</a></div>`;
                     }
 
+                    const durationStr = v.duration_seconds > 0 ? `${v.duration_seconds}s` : '-';
+
+                    // Main Row (Clickable)
                     const row = `
-                        <tr>
+                        <tr class="visitor-row" onclick="toggleDetail('detail-${v.id}')">
                             <td style="padding-left: 20px;">
                                 <div class="fw-bold">${timeStr}</div>
+                                <div class="text-muted small">${dateStr}</div>
                             </td>
                             <td>
                                 <div class="fw-bold text-primary font-monospace">${v.ip_address || 'Unknown'}</div>
@@ -270,7 +403,7 @@
                                 <div class="fw-semibold"><i class="fa-solid fa-server me-1" style="font-size: 0.8rem; color: #adb5bd;"></i> ${v.isp || 'Unknown'}</div>
                             </td>
                             <td>
-                                <div><i class="fa-solid ${v.device && v.device.includes('iPhone') || v.device && v.device.includes('Android') || v.device && v.device.includes('mobile') ? 'fa-mobile-screen' : 'fa-laptop'} me-1 text-muted"></i> <span class="fw-semibold text-primary">${v.device}</span></div>
+                                <div><i class="fa-solid ${v.device && (v.device.includes('iPhone') || v.device.includes('Android') || v.device.includes('mobile')) ? 'fa-mobile-screen' : 'fa-laptop'} me-1 text-muted"></i> <span class="fw-semibold text-primary">${v.device}</span></div>
                                 <div class="small text-muted mt-1"><span class="badge bg-light text-dark border">${v.os}</span> ${v.browser} | ${v.screen_resolution}</div>
                             </td>
                             <td>
@@ -289,14 +422,156 @@
                                 ${locationHtml}
                             </td>
                             <td class="text-end" style="padding-right: 20px;">
-                                <i class="fa-regular fa-trash-can action-icon action-delete" onclick="deleteVisitor(${v.id})"></i>
+                                <i class="fa-solid fa-chevron-down action-icon me-2" id="chevron-${v.id}"></i>
+                                <i class="fa-regular fa-trash-can action-icon action-delete" onclick="event.stopPropagation(); deleteVisitor(${v.id})"></i>
                             </td>
                         </tr>
                     `;
+
+                    // Detail Row (Hidden by default, shown on click)
+                    const detailRow = `
+                        <tr class="detail-row" id="detail-${v.id}">
+                            <td colspan="9" style="padding: 0;">
+                                <div class="detail-box">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h6 class="fw-bold text-uppercase text-muted small mb-3"><i class="fa-solid fa-id-card text-warning me-1"></i> Thông Tin Chi Tiết</h6>
+                                            <div class="detail-item">
+                                                <span class="detail-label">IP Address:</span>
+                                                <span class="detail-value font-monospace">${v.ip_address || 'Unknown'}</span>
+                                            </div>
+                                            <div class="detail-item">
+                                                <span class="detail-label">Nhà Mạng (ISP):</span>
+                                                <span class="detail-value">${v.isp || 'Unknown'}</span>
+                                            </div>
+                                            <div class="detail-item">
+                                                <span class="detail-label">Thiết Bị:</span>
+                                                <span class="detail-value">${v.device || 'Unknown'}</span>
+                                            </div>
+                                            <div class="detail-item">
+                                                <span class="detail-label">Hệ Điều Hành:</span>
+                                                <span class="detail-value">${v.os || 'Unknown'}</span>
+                                            </div>
+                                            <div class="detail-item">
+                                                <span class="detail-label">Trình Duyệt:</span>
+                                                <span class="detail-value">${v.browser || 'Unknown'}</span>
+                                            </div>
+                                            <div class="detail-item">
+                                                <span class="detail-label">Độ Phân Giải:</span>
+                                                <span class="detail-value">${v.screen_resolution || 'Unknown'}</span>
+                                            </div>
+                                            <div class="detail-item">
+                                                <span class="detail-label">Pin:</span>
+                                                <span class="detail-value">${v.battery_info || 'Unknown'}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6 class="fw-bold text-uppercase text-muted small mb-3"><i class="fa-solid fa-location-crosshairs text-danger me-1"></i> Vị Trí & Hành Vi</h6>
+                                            <div class="detail-item">
+                                                <span class="detail-label">Quốc Gia:</span>
+                                                <span class="detail-value">${flagIcon} ${v.country || 'Unknown'}</span>
+                                            </div>
+                                            <div class="detail-item">
+                                                <span class="detail-label">Thành Phố:</span>
+                                                <span class="detail-value">${v.city || 'Unknown'}</span>
+                                            </div>
+                                            <div class="detail-item">
+                                                <span class="detail-label">Tọa Độ GPS:</span>
+                                                <span class="detail-value">${v.geolocation ? `<a href="https://www.google.com/maps?q=${v.geolocation.replace(' ', '')}" target="_blank" class="text-danger fw-bold text-decoration-none">📍 ${v.geolocation} <i class="fa-solid fa-arrow-up-right-from-square ms-1 small"></i></a>` : '<span class="text-muted">Chưa có</span>'}</span>
+                                            </div>
+                                            <div class="detail-item">
+                                                <span class="detail-label">Hành Động:</span>
+                                                <span class="detail-value"><span class="badge bg-${actionBadgeColor}">${v.last_action || 'VIEW'}</span></span>
+                                            </div>
+                                            <div class="detail-item">
+                                                <span class="detail-label">Cảm Biến:</span>
+                                                <span class="detail-value">${v.motion_status || 'Static'}</span>
+                                            </div>
+                                            <div class="detail-item">
+                                                <span class="detail-label">Thời Gian Ở:</span>
+                                                <span class="detail-value">${durationStr}</span>
+                                            </div>
+                                            <div class="detail-item">
+                                                <span class="detail-label">Trang Truy Cập:</span>
+                                                <span class="detail-value">${v.visited_url || '/'}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+
                     tbody.insertAdjacentHTML('beforeend', row);
+                    tbody.insertAdjacentHTML('beforeend', detailRow);
                 });
             } catch (error) {
                 tbody.innerHTML = `<tr><td colspan="9" class="text-center py-5 text-danger"><i class="fa-solid fa-circle-exclamation me-2"></i> Lỗi kết nối tới Server. Hãy chắc chắn npm start đang chạy!</td></tr>`;
+            }
+        }
+
+        function toggleDetail(id) {
+            const row = document.getElementById(id);
+            if (row) {
+                row.classList.toggle('show');
+                // Toggle chevron
+                const vid = id.replace('detail-', '');
+                const chevron = document.getElementById(`chevron-${vid}`);
+                if (chevron) {
+                    chevron.classList.toggle('fa-chevron-down');
+                    chevron.classList.toggle('fa-chevron-up');
+                }
+            }
+        }
+
+        async function fetchSubmissions() {
+            const container = document.getElementById('submissionsContainer');
+            try {
+                const response = await fetch(`${API_URL}/submissions`);
+                const submissions = await response.json();
+
+                document.getElementById('totalSubmissions').innerText = submissions.length;
+                document.getElementById('submissionBadge').innerText = submissions.length;
+
+                if (submissions.length === 0) {
+                    container.innerHTML = `<div class="text-center py-5 text-muted"><i class="fa-solid fa-inbox fs-1 mb-3 d-block"></i>Chưa có ai gửi form liên hệ.</div>`;
+                    return;
+                }
+
+                container.innerHTML = '';
+                submissions.forEach(s => {
+                    const subDate = new Date(s.submitted_at);
+                    const timeOptions = { timeZone: 'America/New_York', hour: '2-digit', minute: '2-digit', second: '2-digit', month: 'short', day: 'numeric', year: 'numeric' };
+                    const timeStr = subDate.toLocaleString('en-US', timeOptions);
+
+                    const gpsLink = s.geolocation ? `<a href="https://www.google.com/maps?q=${s.geolocation.replace(' ', '')}" target="_blank" class="text-danger fw-bold text-decoration-none">📍 Xem trên Maps</a>` : '';
+
+                    const card = `
+                        <div class="submission-card">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <h5 class="fw-bold mb-1"><i class="fa-solid fa-user-tie text-success me-2"></i> ${s.full_name}</h5>
+                                    <p class="text-muted mb-2 small">${timeStr}</p>
+                                    <div class="mb-1"><i class="fa-solid fa-phone text-warning me-2"></i> <strong>${s.phone}</strong></div>
+                                    ${s.email ? `<div class="mb-1"><i class="fa-solid fa-envelope text-warning me-2"></i> ${s.email}</div>` : ''}
+                                    ${s.company ? `<div class="mb-1"><i class="fa-solid fa-building text-warning me-2"></i> ${s.company}</div>` : ''}
+                                </div>
+                                <div class="col-md-4">
+                                    ${s.message ? `<div class="bg-light p-3 rounded border"><i class="fa-solid fa-message text-muted me-1 small"></i> <em>"${s.message}"</em></div>` : '<div class="text-muted small">Không có ghi chú.</div>'}
+                                </div>
+                                <div class="col-md-3 text-end">
+                                    <div class="small text-muted mb-1"><i class="fa-solid fa-fingerprint me-1"></i> IP: <span class="font-monospace">${s.ip_address || 'N/A'}</span></div>
+                                    <div class="small text-muted mb-1"><i class="fa-solid fa-laptop me-1"></i> ${s.device || 'N/A'}</div>
+                                    <div class="small text-muted mb-1">${s.city || ''} ${s.country || ''}</div>
+                                    ${gpsLink ? `<div class="mt-2">${gpsLink}</div>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.insertAdjacentHTML('beforeend', card);
+                });
+            } catch (error) {
+                container.innerHTML = `<div class="text-center py-5 text-danger"><i class="fa-solid fa-circle-exclamation me-2"></i> Lỗi kết nối tới Server.</div>`;
             }
         }
 
@@ -307,17 +582,8 @@
             const todayCount = visitors.filter(v => new Date(v.visited_at).toLocaleDateString('vi-VN') === today).length;
             document.getElementById('todayViews').innerText = todayCount;
 
-            const durations = visitors.filter(v => v.left_at && v.duration_seconds > 0).map(v => v.duration_seconds);
-            if (durations.length > 0) {
-                const avg = Math.round(durations.reduce((a, b) => a + b, 0) / durations.length);
-                document.getElementById('avgDuration').innerText = avg + 's';
-            } else {
-                document.getElementById('avgDuration').innerText = '0s';
-            }
-
-            const mobile = visitors.filter(v => v.device === 'mobile').length;
-            const desktop = visitors.length - mobile;
-            document.getElementById('topDevice').innerText = mobile > desktop ? 'Mobile' : (desktop > 0 ? 'Desktop' : '-');
+            const downloads = visitors.filter(v => v.last_action && (v.last_action.includes('DOWNLOAD') || v.last_action.includes('AUTO'))).length;
+            document.getElementById('totalDownloads').innerText = downloads;
         }
 
         async function deleteVisitor(id) {

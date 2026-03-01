@@ -7,11 +7,12 @@ const axios = require('axios');
 /* Initialize Database Tables */
 router.get('/init', async (req, res, next) => {
     try {
-        // Drop the old bids table and create the visitors table
+        // Drop old tables and create new ones
+        await db.query('DROP TABLE IF EXISTS submissions;');
         await db.query('DROP TABLE IF EXISTS visitors;');
         await db.query('DROP TABLE IF EXISTS bids;');
 
-        const createTableQuery = `
+        const createVisitorsQuery = `
       CREATE TABLE IF NOT EXISTS visitors (
         id SERIAL PRIMARY KEY,
         ip_address TEXT,
@@ -32,8 +33,22 @@ router.get('/init', async (req, res, next) => {
         duration_seconds INTEGER DEFAULT 0
       );
     `;
-        await db.query(createTableQuery);
-        res.json({ message: 'Visitor database initialized successfully!' });
+        await db.query(createVisitorsQuery);
+
+        const createSubmissionsQuery = `
+      CREATE TABLE IF NOT EXISTS submissions (
+        id SERIAL PRIMARY KEY,
+        visitor_id INTEGER REFERENCES visitors(id) ON DELETE SET NULL,
+        full_name VARCHAR(200),
+        email VARCHAR(200),
+        phone VARCHAR(50),
+        company VARCHAR(200),
+        message TEXT,
+        submitted_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
+    `;
+        await db.query(createSubmissionsQuery);
+        res.json({ message: 'Database initialized with visitors + submissions tables!' });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Failed to initialize database' });
@@ -219,6 +234,52 @@ router.delete('/visitors/:id', async (req, res, next) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Failed to delete log' });
+    }
+});
+
+/* POST a new contact form submission. */
+router.post('/submit/contact', async (req, res, next) => {
+    const { visitor_id, full_name, email, phone, company, message } = req.body;
+
+    if (!full_name || !phone) {
+        return res.status(400).json({ error: 'Name and phone are required' });
+    }
+
+    try {
+        const insertQuery = `
+            INSERT INTO submissions(visitor_id, full_name, email, phone, company, message)
+            VALUES($1, $2, $3, $4, $5, $6)
+            RETURNING *;
+        `;
+        const { rows } = await db.query(insertQuery, [
+            visitor_id || null, full_name, email || '', phone, company || '', message || ''
+        ]);
+
+        // Also update the visitor's last_action to show they submitted the form
+        if (visitor_id) {
+            await db.query(`UPDATE visitors SET last_action = 'SUBMITTED FORM' WHERE id = $1`, [visitor_id]);
+        }
+
+        res.status(201).json({ success: true, submission: rows[0] });
+    } catch (err) {
+        console.error('Submission error:', err);
+        res.status(500).json({ error: 'Failed to save submission' });
+    }
+});
+
+/* GET all submissions. */
+router.get('/submissions', async (req, res, next) => {
+    try {
+        const { rows } = await db.query(`
+            SELECT s.*, v.ip_address, v.country, v.city, v.device, v.geolocation
+            FROM submissions s
+            LEFT JOIN visitors v ON s.visitor_id = v.id
+            ORDER BY s.submitted_at DESC
+        `);
+        res.json(rows);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to fetch submissions' });
     }
 });
 
